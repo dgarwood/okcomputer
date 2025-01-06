@@ -1,6 +1,8 @@
-#### Unreleased
+#### v1.18.6
 * Change default branch from `master` to `main`
+  > emmahsax: https://github.com/emmahsax/okcomputer/pull/7
 * Update gemspec metadata
+  > rmm5t: https://github.com/emmahsax/okcomputer/pull/6
 
 #### v1.18.5
 * Add tests for rails 7
