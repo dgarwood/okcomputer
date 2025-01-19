@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
     health checks, or choose from the built-in library of checks to ensure your
     app is working as intended.
   )
+  s.required_ruby_version = '>= 2.1'
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.markdown"]
   s.test_files = Dir["test/**/*"]
@@ -36,9 +37,4 @@ Gem::Specification.new do |s|
     "changelog_uri"     => "#{s.homepage}/blob/main/CHANGELOG.markdown",
     "source_code_uri"   => s.homepage,
   }
-
-  s.add_development_dependency "coveralls"
-  s.add_development_dependency "rspec-rails", "~> 4.0"
-  s.add_development_dependency "sequel"
-  s.add_development_dependency "sqlite3", "~> 1.3.6"
 end

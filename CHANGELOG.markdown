@@ -1,3 +1,7 @@
+#### Unreleased
+* Fix rspec tests and add testing for higher versions of Ruby/Rails
+  > emmahsax: https://github.com/emmahsax/okcomputer/pull/9
+
 #### v1.18.6
 * Change default branch from `master` to `main`
   > emmahsax: https://github.com/emmahsax/okcomputer/pull/7
