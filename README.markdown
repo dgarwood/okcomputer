@@ -1,23 +1,21 @@
 [![Gem Version](https://badge.fury.io/rb/okcomputer.svg)](https://badge.fury.io/rb/okcomputer)
 [![Downloads](https://img.shields.io/gem/dt/okcomputer.svg)](https://rubygems.org/gems/okcomputer)
 [![License](https://img.shields.io/github/license/emmahsax/okcomputer.svg)](LICENSE)
-[![Ruby Versions](https://img.shields.io/badge/Ruby-%3E%3D%202.3-brightgreen.svg)](https://www.ruby-lang.org)
+[![Ruby Versions](https://img.shields.io/badge/Ruby-%3E%3D%202.1-brightgreen.svg)](https://www.ruby-lang.org)
 [![Build Status](https://github.com/emmahsax/okcomputer/actions/workflows/ci.yml/badge.svg)](https://github.com/emmahsax/okcomputer/actions/workflows/ci.yml)
 
-# OK Computer
+# OkComputer
 
-Inspired by the ease of installing and setting up [fitter-happier] as a Rails
+Inspired by the ease of installing and setting up [fitter-happier](https://rubygems.org/gems/fitter-happier) as a Rails
 application's health check, but frustrated by its lack of flexibility, OK
 Computer was born. It provides a robust endpoint to perform server health
 checks with a set of built-in plugins, as well as a simple interface to add
 your own custom checks.
 
 For more insight into why we built this, check out [our blog post introducing
-OK Computer][blog].
+OkComputer](http://pulse.sportngin.com/news_article/show/267646?referrer_id=543230).
 
-[blog]:http://pulse.sportngin.com/news_article/show/267646?referrer_id=543230
-
-OkComputer currently supports the following Rails versions:
+OkComputer currently fully supports the following Rails versions:
 
 * 7.0
 * 6.1
@@ -26,26 +24,38 @@ OkComputer currently supports the following Rails versions:
 * 5.1
 * 4.2
 
+In addition, the CI tests are passing on, but is not guaranteed to work with, the following Rails versions:
+
+* 8.0
+* 7.2
+* 7.1
+* 5.0
+* 4.1
+* 4.0
+
 #### Not using Rails?
 
-If you use [Grape] instead of Rails, check out [okcomputer-grape].
-
-[Grape]:https://github.com/ruby-grape/grape
-[okcomputer-grape]:https://github.com/bellycard/okcomputer-grape
+If you use [Grape](https://github.com/ruby-grape/grape) instead of Rails, check out [okcomputer-grape](https://github.com/bellycard/okcomputer-grape).
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'okcomputer'
+```ruby
+gem 'okcomputer'
+```
 
 And then execute:
 
-    $ bundle
+```
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install okcomputer
+```
+$ gem install okcomputer
+```
 
 ## Usage
 
@@ -89,7 +99,7 @@ you can configure it with:
 
 ```ruby
 # config/initializers/okcomputer.rb
-OkComputer.mount_at = 'health_checks'    # mounts at /health_checks
+OkComputer.mount_at = 'health_checks' # Mounts at /health_checks
 ```
 
 For more control of adding OkComputer to your routes, set `OkComputer.mount_at
@@ -112,7 +122,7 @@ Log check results by setting `OkComputer.logger`. Note: results will be logged a
 OkComputer.logger = Rails.logger
 ```
 
-```sh
+```
 [okcomputer] mycheck: PASSED mymessage (0s)
 ```
 
@@ -171,9 +181,7 @@ This check will run and report its status, but will not affect the HTTP status c
 The plain-text output flows through Rails' internationalization framework.
 Adjust the output as necessary by defining `okcomputer.check.passed` and
 `okcomputer.check.failed` keys in your setup. The default values are available
-[in `okcomputer.en.yml`][i18n].
-
-[i18n]:https://github.com/sportngin/okcomputer/blob/eb0be05cc1527e083edd63cfbb0a071f7892c822/config/locales/okcomputer.en.yml#L1-L5
+[in `okcomputer.en.yml`](https://github.com/emmahsax/okcomputer/blob/main/config/locales/okcomputer.en.yml).
 
 ## Running checks in parallel
 
@@ -201,7 +209,7 @@ as it will start to artificially bring your request time down.
 
 If you'd like to intentionally count OkComputer requests in your NewRelic analytics, set:
 
-```
+```ruby
 # config/initializers/okcomputer.rb
 OkComputer.analytics_ignore = false
 ```
@@ -210,7 +218,7 @@ OkComputer.analytics_ignore = false
 
 ### Setup
 
-```plaintext
+```
 $ bundle install
 ```
 
@@ -220,7 +228,7 @@ OkComputer tests are written with [RSpec](http://rspec.info/).
 
 To run the full test suite:
 
-```plaintext
+```
 $ rake spec
 ```
 
@@ -230,10 +238,17 @@ bundle and run the tests with a specific version of Rails.
 
 ## Contributing
 
-1. Fork it
+1. Fork this repository
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+5. Create a new pull request on upstream (this repository)
+6. Update [`CHANGELOG.markdown`](https://github.com/emmahsax/okcomputer/blob/main/CHANGELOG.markdown) under an `Unreleased` tag version (create a new one at the top if needed) with summarized changes and link to the pull request
 
-[fitter-happier]:https://rubygems.org/gems/fitter-happier
+## Releasing
+
+1. Ensure you have push permissions to [RubyGems](https://rubygems.org/gems/okcomputer)
+2. Merge all PRs so that `main` is up to date with the new version
+3. Determine the new version ([`lib/ok_computer/version`](https://github.com/emmahsax/okcomputer/blob/main/lib/ok_computer/version.rb) has the current latest one) by following [semantic versioning](https://semver.org/) guidelines
+4. Ensure you're on the `main` branch and you are locally up to date (`git checkout main && git pull`)
+5. Run the release script and pass in the new version (`bin/release vX.X.X`... the `v` at the beginning is optional)
