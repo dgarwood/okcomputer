@@ -2,36 +2,33 @@ module OkComputer
   class ActiveRecordMigrationsCheck < Check
     # Public: Check if migrations are pending or not
     def check
-      return unsupported unless supported?
+      # this check is only valid if config.active_record.migration_error
+      # is set to false rather than :page_load
+      # :page_load is the default in development, otherwise this is false
+      if Rails.configuration.active_record.migration_error
+        return mark_message("NO pending migrations") if Rails.env.development?
 
-      if needs_migration?
-        mark_failure
-        mark_message "Pending migrations"
+        return check_on_page_load
+      end
+
+      if Rails.version >= "7.1"
+        ActiveRecord::Migration.check_all_pending!
       else
-        mark_message "NO pending migrations"
+        ActiveRecord::Migration.check_pending!
       end
-    end
 
-    def needs_migration?
-      if ActiveRecord::Migrator.respond_to?(:needs_migration?) # Rails <= 5.1
-        ActiveRecord::Migrator.needs_migration?
-      else # Rails >= 5.2
-        ActiveRecord::Base.connection.migration_context.needs_migration?
-      end
-    end
-
-    def supported?
-      ActiveRecord::Migrator.respond_to?(:needs_migration?) ||
-        (ActiveRecord::Base.connection.respond_to?(:migration_context) &&
-         ActiveRecord::Base.connection.migration_context.respond_to?(:needs_migration?))
+      mark_message "NO pending migrations"
+    rescue ActiveRecord::PendingMigrationError
+      mark_failure
+      mark_message "Pending migrations"
     end
 
     private
 
-    # Private: Fail the check if ActiveRecord cannot check migration status
-    def unsupported
-      mark_failure
-      mark_message "This version of ActiveRecord does not support checking whether migrations are pending"
+    # We do not fail the check here since this method is only called
+    # when rails is configured to make the check and throw an error
+    def check_on_page_load
+      mark_message "NOTE: pending migrations are checked on page_load"
     end
   end
 end
