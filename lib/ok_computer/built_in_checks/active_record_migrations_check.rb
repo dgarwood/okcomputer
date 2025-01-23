@@ -11,7 +11,7 @@ module OkComputer
         return check_on_page_load
       end
 
-      if Rails.version >= "7.1"
+      if Gem::Version.new(Rails.version) >= Gem::Version.new("7.1")
         ActiveRecord::Migration.check_all_pending!
       else
         ActiveRecord::Migration.check_pending!
