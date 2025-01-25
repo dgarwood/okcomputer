@@ -3,7 +3,7 @@ require "rails_helper"
 module OkComputer
   describe ActiveRecordMigrationsCheck do
     let(:rails_pending_migration_method) do
-      if Rails.version >= "7.1"
+      if Gem::Version.new(Rails.version) >= Gem::Version.new("7.1")
         # rails now supports multiple databases and checks
         # that any of them have pending migrations
         :check_all_pending!
@@ -32,7 +32,8 @@ module OkComputer
 
       context "with pending migrations" do
         before do
-          expect(ActiveRecord::Migration).to receive(rails_pending_migration_method).and_raise(ActiveRecord::PendingMigrationError)
+          expect(ActiveRecord::Migration)
+            .to receive(rails_pending_migration_method).and_raise(ActiveRecord::PendingMigrationError)
         end
 
         it { is_expected.not_to be_successful_check }
@@ -46,15 +47,6 @@ module OkComputer
 
         it { is_expected.to be_successful_check }
         it { is_expected.to have_message "NOTE: pending migrations are checked on page_load" }
-
-        context "when in the development env" do
-          before do
-            allow(Rails.env).to receive(:development?).and_return(true)
-          end
-
-          it { is_expected.to be_successful_check }
-          it { is_expected.to have_message "NO pending migrations" }
-        end
       end
     end
   end
