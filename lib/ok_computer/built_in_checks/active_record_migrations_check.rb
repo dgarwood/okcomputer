@@ -4,9 +4,7 @@ module OkComputer
     def check
       return mark_message(page_load_message) if check_on_page_load?
 
-      # produces ActiveRecord::PendingMigrationError
-      # if pending migrations exist
-      check_pending(Rails.version)
+      error_if_pending_migrations(Rails.version)
 
       mark_message "NO pending migrations"
     rescue ActiveRecord::PendingMigrationError
@@ -25,7 +23,7 @@ module OkComputer
       Rails.configuration.active_record.migration_error
     end
 
-    def check_pending(version_string)
+    def error_if_pending_migrations(version_string)
       if Gem::Version.new(version_string) >= Gem::Version.new("7.1")
         ActiveRecord::Migration.check_all_pending!
       else
